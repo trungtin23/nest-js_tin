@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Users } from './users/user.entity/user.entity';
+import { Users } from './users/entities/user.entity';
 import { PostsModule } from './posts/posts.module';
 @Module({
   controllers: [AppController],
