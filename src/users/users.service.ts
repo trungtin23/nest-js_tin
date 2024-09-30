@@ -1,4 +1,4 @@
-import { UpdatePostDto } from './../posts/dto/update-post.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
@@ -17,7 +17,10 @@ export class UsersService {
   }
 
   findOne(id: string): Promise<Users | null> {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ['posts'],
+    });
   }
 
   async create(createUserDto: CreateUserDto): Promise<Users> {
@@ -25,8 +28,8 @@ export class UsersService {
   }
 
   // eslint-disable-next-line prettier/prettier
-  async update( id: string, updatePostDto: UpdatePostDto): Promise<UpdateResult> {
-    return await this.usersRepository.update(id, updatePostDto);
+  async update( id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+    return await this.usersRepository.update(id, updateUserDto);
   }
   async delete(id): Promise<DeleteResult> {
     return await this.usersRepository.delete(id);

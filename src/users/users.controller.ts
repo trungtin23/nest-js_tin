@@ -63,8 +63,8 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       return new ResponeData<Users>(
-        HttpMessage.SUCCESS_MESSAGE,
-        HttpStatus.SUCESS,
+        HttpMessage.CREATED_MESSAGE,
+        HttpStatus.CREATED,
         await this.usersService.create(createUserDto),
       );
     } catch (error) {
@@ -99,7 +99,7 @@ export class UsersController {
 
       const updatedUser = await this.usersService.findOne(id);
       return new ResponeData<Users>(
-        HttpMessage.SUCCESS_MESSAGE,
+        HttpMessage.UPDATE_MESSAGE,
         HttpStatus.SUCESS,
         updatedUser,
       );
@@ -113,7 +113,34 @@ export class UsersController {
   }
 
   @Delete(':id')
-  deleteUser(@Param() params) {
-    return this.usersService.delete(params.id);
+  async deleteUser(@Param('id') id: string) {
+    const user = await this.usersService.findOne(id);
+    if (!user) {
+      return new ResponeData<null>(
+        HttpMessage.NOTFOUND_MESSAGE,
+        HttpStatus.NOT_FOUND,
+        null,
+      );
+    }
+    const deleteUser = await this.usersService.delete(id);
+    if (deleteUser.affected === 0) {
+      return new ResponeData<null>(
+        HttpMessage.ERROR_MESSAGE,
+        HttpStatus.ERROR,
+        null,
+      );
+    }
+    return new ResponeData<Users>(
+      HttpMessage.DELETE_MESSAGE,
+      HttpStatus.SUCESS,
+      null,
+    );
+  }
+  catch(error) {
+    return new ResponeData<null>(
+      error.message || HttpMessage.ERROR_MESSAGE,
+      HttpStatus.ERROR,
+      null,
+    );
   }
 }
