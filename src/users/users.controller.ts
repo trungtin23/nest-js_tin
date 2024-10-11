@@ -59,6 +59,30 @@ export class UsersController {
       );
     }
   }
+  @Get(':userName')
+  async findByName(@Param('userName') userName: string) {
+    try {
+      const user = await this.usersService.findByName(userName);
+      if (!user) {
+        return new ResponeData<null>(
+          HttpMessage.NOTFOUND_MESSAGE,
+          HttpStatus.NOT_FOUND,
+          null,
+        );
+      }
+      return new ResponeData<Users>(
+        HttpMessage.SUCCESS_MESSAGE,
+        HttpStatus.SUCESS,
+        user,
+      );
+    } catch (error) {
+      return new ResponeData<null>(
+        error.message || HttpMessage.ERROR_MESSAGE,
+        HttpStatus.ERROR,
+        null,
+      );
+    }
+  }
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {

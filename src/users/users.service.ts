@@ -23,6 +23,13 @@ export class UsersService {
     });
   }
 
+  findByName(userName: string): Promise<Users | null> {
+    return this.usersRepository.findOne({
+      where: { userName },
+      relations: ['posts'],
+    });
+  }
+
   async create(createUserDto: CreateUserDto): Promise<Users> {
     return await this.usersRepository.save(createUserDto);
   }
