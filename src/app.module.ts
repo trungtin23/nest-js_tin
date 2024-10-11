@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { Users } from './users/entities/user.entity';
 import { Posts } from './posts/entities/post.entity';
 import { PostsModule } from './posts/posts.module';
+import { AuthModule } from './auth/auth.module';
+import { NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { checkLogin } from './middleware/checkLogin';
 
 @Module({
   controllers: [AppController],
@@ -26,6 +29,11 @@ import { PostsModule } from './posts/posts.module';
       entities: [Users, Posts],
     }),
     PostsModule,
+    AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(checkLogin).forRoutes('/posts');
+  }
+}

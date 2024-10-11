@@ -20,4 +20,5 @@ export class Users {
 
   @OneToMany(() => Posts, (post) => post.user)
   posts: Posts[];
+    userId: any;
 }
